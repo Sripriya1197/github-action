@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sampleapp-qa
+  namespace: qa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sampleapp-qa
+  template:
+    metadata:
+      labels:
+        app: sampleapp-qa
+    spec:
+      containers:
+        - name: sampleapp-container-qa
+          image: 273354669111.dkr.ecr.ap-south-1.amazonaws.com/sampleapp:latest
+          ports:
+            - containerPort: 8082
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "qa"
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "500m"
+            limits:
+              memory: "256Mi"
+              cpu: "1000m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sampleapp-qa
+  namespace: qa
+spec:
+  selector:
+    app: sampleapp-qa  
+  ports:
+    - protocol: TCP      
+      port: 80             
+      targetPort: 8082    
+  type: ClusterIP     

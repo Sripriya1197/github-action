@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sampleapp-prod
+  namespace: prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sampleapp-prod
+  template:
+    metadata:
+      labels:
+        app: sampleapp-prod
+    spec:
+      containers:
+        - name: sampleapp-container-prod
+          image: 273354669111.dkr.ecr.ap-south-1.amazonaws.com/sampleapp:latest
+          ports:
+            - containerPort: 8083
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "500m"
+            limits:
+              memory: "256Mi"
+              cpu: "1000m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sampleapp-prod
+  namespace: prod
+spec:
+  selector:
+    app: sampleapp-prod
+  ports:
+    - protocol: TCP      
+      port: 80             
+      targetPort: 8083    
+  type: ClusterIP     
