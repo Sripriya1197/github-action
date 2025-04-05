@@ -28,6 +28,7 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "1000m"
+
 ---
 apiVersion: v1
 kind: Service
@@ -39,6 +40,6 @@ spec:
     app: sampleapp-prod
   ports:
     - protocol: TCP      
-      port: 80             
+      port: 8083          
       targetPort: 8083    
-  type: ClusterIP     
+  type: ClusterIP
