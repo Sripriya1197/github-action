@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.4</version>
+        <version>3.4.4</version> <!-- Correct version -->
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -36,23 +36,23 @@
 
     <build>
         <plugins>
-            <!-- Spring Boot Maven Plugin -->
+            <!-- Spring Boot Maven Plugin (Version should match the parent Spring Boot version) -->
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <version>3.4.4</version> <!-- This should match the Spring Boot version -->
+        </plugin>
 
             <!-- Maven Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version> <!-- Ensure you're using an updated version -->
+                <version>3.10.1</version>
                 <configuration>
-                    <source>${java.version}</source>  <!-- Use the Java version from properties -->
-                    <target>${java.version}</target>
+                    <source>17</source> <!-- Use the Java version from properties -->
+                    <target>17</target>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
 </project>
