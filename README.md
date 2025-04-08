@@ -19,4 +19,5 @@ This Document outlines the branching strategy and deployment approch used for th
   5.Created a pull Request from feature
   6.After PR review, merged into dev branch
   7.CI/CD pipeline triggered on dev branch
-    
+
+# parameterize kubectl
