@@ -1,0 +1,17 @@
+name: sampleapp-qa
+namespace: qa
+replicaCount: 1
+image:
+  repository: 273354669111.dkr.ecr.ap-south-1.amazonaws.com/sampleapp
+  tag: "1.0.0"
+containerPort: 8082
+service:
+  name: sampleapp-qa
+  port: 8082
+serviceAccount:
+  create: true
+  name: sampleapp-serviceaccount
+ingress:
+  enabled: false
+autoscaling:
+  enabled: false 
