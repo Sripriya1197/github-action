@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{.Values.name}}
+  name: {{ .Values.name}}
   namespace: {{ .Values.namespace}}
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount}}
   selector:
     matchLabels:
       app: {{ .Values.name}}
@@ -17,7 +17,7 @@ spec:
         - name: {{ .Values.name}}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           ports:
-            - containerPort: {{.Values.containerPort}} 
+            - containerPort: {{ .Values.containerPort}} 
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "dev"
