@@ -8,3 +8,10 @@ containerPort: 8081
 service:
   name: sampleapp-dev
   port: 8081
+serviceAccount:
+  create: true
+  name: sampleapp-serviceaccount
+ingress:
+  enabled: false
+autoscaling:
+  enabled: false 
