@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: sampleapp-container
-          image: 273354669111.dkr.ecr.ap-south-1.amazonaws.com/sampleapp:latest
+          image: 273354669111.dkr.ecr.ap-south-1.amazonaws.com/sampleapp:v2
           ports:
             - containerPort: 8081   
           env:
