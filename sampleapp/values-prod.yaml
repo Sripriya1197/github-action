@@ -1,12 +1,12 @@
-name: sampleapp-qa
-namespace: qa
+name: sampleapp-prod
+namespace: prod
 replicaCount: 1
 image:
   repository: 273354669111.dkr.ecr.ap-south-1.amazonaws.com/sampleapp
   tag: "1.1.1"
 containerPort: 8083
 service:
-  name: sampleapp-qa
+  name: sampleapp-prod
   port: 8083
 serviceAccount:
   create: true
