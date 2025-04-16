@@ -96,3 +96,29 @@ jobs:
 
       - name: Verify AWS Identity
         run: aws sts get-caller-identity
+
+  docker-build-and-push-to-ecr:
+    runs-on: self-hosted
+    needs: aws-login
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Jar
+        run: mvn package
+
+      - name: Login to Amazon ECR
+        run: |
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
+          docker login --username AWS --password-stdin ${{ secrets.REPOSITORY_URI }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t github-action-sample
+      - name: Tag Docker image
+        run: |
+          docker tag github-action-sample ${{ secrets.REPOSITORY_URI }}:${{IMAGE_TAG}}
+
+      - name: Push Docker image
+        run: |
+          docker push ${{ secrets.REPOSITORY_URI }}:${{IMAGE_TAG}}
