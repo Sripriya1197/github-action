@@ -190,7 +190,7 @@ jobs:
 
       - name: Helm Upgrade or Install
         run: |
-          helm upgrade --install sampleapp ./sampleapp \
+          helm upgrade --install sampleapp-prod ./sampleapp \
             --namespace prod \
             --create-namespace \
             --values ./sampleapp/values-prod.yaml \
