@@ -190,7 +190,7 @@ jobs:
 
       - name: Helm Upgrade or Install
         run: |
-          helm upgrade --install my-release ./helm \
+          helm upgrade --install my-release ./sampleapp \
             --namespace prod \
             --create-namespace \
             --set image.repository=${{ secrets.REPOSITORY_URI }} \
