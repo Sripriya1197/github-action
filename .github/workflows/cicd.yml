@@ -193,7 +193,7 @@ jobs:
           helm upgrade --install sampleapp-prod ./sampleapp \
             --namespace prod \
             --create-namespace \
-            --values ./sampleapp/values-prod.yaml
+            --values ./sampleapp/values-prod.yaml \
             --set image.repository=${{ secrets.REPOSITORY_URI }} \
             --set image.tag=${{ secrets.IMAGE_TAG }}
            
