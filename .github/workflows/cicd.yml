@@ -170,6 +170,10 @@ jobs:
             --region ${{ secrets.AWS_REGION }} \
             --name ${{ vars.EKS_CLUSTER_NAME }}
 
+      - name: Delete existing ServiceAccount (if exists)
+        run: |
+          kubectl delete serviceaccount sampleapp-serviceaccount -n prod --ignore-not-found
+
       - name: Helm Upgrade or Install
         run: |
           helm upgrade --install sampleapp-prod ./sampleapp \
