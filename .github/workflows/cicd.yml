@@ -3,9 +3,7 @@ name: CICD
 on:
   push:
     branches: [ "main" ]
-permissions:
-  id-token: write      
-  contents: read
+
 
 jobs:
   compile:
@@ -102,11 +100,15 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-         aws-region: ${{ secrets.AWS_region}}
-         role-to-assume: ${{secrets.AWS_ROLE_TO_ASSUME}}
-         role-session-name: github-action
+          aws-region: ${{AWS_REGION}}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+
       - name: Verify AWS Identity
         run: aws sts get-caller-identity
+
+
 
   docker-build-and-push-to-ecr:
     runs-on: self-hosted
@@ -138,9 +140,10 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-         aws-region: ${{ secrets.AWS_region}}
-         role-to-assume: ${{secrets.AWS_ROLE_TO_ASSUME}}
-         role-session-name: github-action
+          aws-region: ${{AWS_REGION}}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
       - name: Login to Amazon ECR
         run: |
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
