@@ -125,7 +125,7 @@ jobs:
         run: |
           echo "JAVA_HOME is $JAVA_HOME"
           java -version
-          javac -version
+          javac -version 
 
       - name: Build Jar using Java 17
         run: |
