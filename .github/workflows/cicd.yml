@@ -5,63 +5,8 @@ on:
     branches: [ "main" ]
 
 jobs:
-  compile:
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v4
-
-  aws-login:
-    runs-on: self-hosted
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: ${{ secrets.AWS_REGION }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-
-      - name: Verify AWS Identity
-        run: aws sts get-caller-identity
-
-  docker-build-and-push-to-ecr:
-    runs-on: self-hosted
-    needs: aws-login
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: ${{ secrets.AWS_REGION }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-
-      - name: Login to Amazon ECR
-        run: |
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
-          docker login --username AWS --password-stdin ${{ secrets.REPOSITORY_URI }}
-
-      - name: Build Docker image
-        run: |
-          docker build -t github-action-sample .
-
-      - name: Tag Docker image
-        run: |
-          docker tag github-action-sample ${{ secrets.REPOSITORY_URI }}:${{ secrets.IMAGE_TAG }}
-
-      - name: Push Docker image
-        run: |
-          docker push ${{ secrets.REPOSITORY_URI }}:${{ secrets.IMAGE_TAG }}
-
   ecs-deploy:
     runs-on: self-hosted
-    needs: docker-build-and-push-to-ecr
     steps:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -69,15 +14,15 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
 
-      - name: Force new deployment in ECS
+      - name: Force New Deployment on ECS
         run: |
           aws ecs update-service \
             --cluster my-ecs-cluster \
             --service github-app \
             --force-new-deployment \
             --region ${{ secrets.AWS_REGION }}
+
       
 
 
