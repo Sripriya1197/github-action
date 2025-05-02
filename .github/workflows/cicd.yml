@@ -9,15 +9,17 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
-    aws-login:
-     runs-on: self-hosted   
-     steps:
+
+  aws-login:
+    runs-on: self-hosted
+    steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-region: ${{ secrets.AWS_REGION}}
+          aws-region: ${{ secrets.AWS_REGION }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
@@ -31,15 +33,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-region: ${{ secrets.AWS_REGION}}
+          aws-region: ${{ secrets.AWS_REGION }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-          
+
       - name: Login to Amazon ECR
         run: |
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
@@ -57,29 +59,25 @@ jobs:
         run: |
           docker push ${{ secrets.REPOSITORY_URI }}:${{ secrets.IMAGE_TAG }}
 
-          ecs-deploy:
-  runs-on: self-hosted
-  needs: docker-build-and-push-to-ecr  # Run after image is pushed to ECR
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+  ecs-deploy:
+    runs-on: self-hosted
+    needs: docker-build-and-push-to-ecr
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
 
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-region: ${{ secrets.AWS_REGION}}
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-
-    - name: Update ECS Service
-      run: |
-        aws ecs update-service \
-          --cluster my-ecs-cluster \
-          --service github-app \
-          --force-new-deployment \
-          --image ${{ secrets.REPOSITORY_URI }}:${{ secrets.IMAGE_TAG }}
-          --region ${{ secrets.AWS_REGION }}
+      - name: Force new deployment in ECS
+        run: |
+          aws ecs update-service \
+            --cluster my-ecs-cluster \
+            --service github-app \
+            --force-new-deployment \
+            --region ${{ secrets.AWS_REGION }}
       
 
 
